@@ -9,6 +9,9 @@ echo "Starting setup process..."
 apt-get update
 apt-get install -y git build-essential python3-dev libasound2-dev portaudio19-dev
 
+# Install ffmpeg (required for soundfile)
+apt-get install -y ffmpeg
+
 # Create a virtual environment
 python3 -m venv venv
 source venv/bin/activate
