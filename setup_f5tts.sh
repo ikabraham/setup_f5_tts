@@ -50,35 +50,35 @@ cd ..
 env >> /etc/environment
 
 # --- Application Phase ---
- # Check if we are in an autoscaling group.
+# Check if we are in an autoscaling group.
 if [ -z "$VAST_AUTOSCALE_ENABLED" ]; then
     # Create a simple test script to verify installation
     cat << 'EOF' > test_f5tts.py
-    import sys
-    import os
-    sys.path.append(os.path.join(os.getcwd(), 'F5-TTS', 'src'))
-    from f5_tts.api import F5TTS
+import sys
+import os
+sys.path.append(os.path.join(os.getcwd(), 'F5-TTS', 'src'))
+from f5_tts.api import F5TTS
 
-    try:
-        tts = F5TTS()
-        text = "Hello, this is a test of F5 TTS."
+try:
+    tts = F5TTS()
+    text = "Hello, this is a test of F5 TTS."
 
-        # Use a default audio file path
-        example_audio_path = os.path.join(os.getcwd(), 'F5-TTS', 'src', 'f5_tts', 'infer', 'examples', 'basic', 'basic_ref_en.wav')
+    # Use a default audio file path
+    example_audio_path = os.path.join(os.getcwd(), 'F5-TTS', 'src', 'f5_tts', 'infer', 'examples', 'basic', 'basic_ref_en.wav')
 
-        wav, sr, spect = tts.infer(
-            ref_file=example_audio_path,
-            ref_text="This is a test.",
-            gen_text=text,
-            file_wave="test_output.wav",
-            seed=-1,  # random seed = -1
-        )
+    wav, sr, spect = tts.infer(
+        ref_file=example_audio_path,
+        ref_text="This is a test.",
+        gen_text=text,
+        file_wave="test_output.wav",
+        seed=-1,  # random seed = -1
+    )
 
-        print("Test complete - check for test_output.wav")
-    except Exception as e:
-        print(f"Error during test: {e}")
-        exit(1)
-    EOF
+    print("Test complete - check for test_output.wav")
+except Exception as e:
+    print(f"Error during test: {e}")
+    exit(1)
+EOF
 
     # Run the test script
     echo "Running test script..."
@@ -129,7 +129,7 @@ def synthesize():
             ref_file_path = 'ref_audio.wav'
             with open(ref_file_path, 'wb') as f:
               f.write(response.content)
-        except requests.exceptions.RequestException as e:
+        except Exception as e:
             return {'error': f'Error downloading ref_file: {e}'}, 400
 
         wav, sr, spect = tts.infer(
