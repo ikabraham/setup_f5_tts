@@ -115,10 +115,11 @@ def synthesize():
            return {'error': 'No JSON payload provided'}, 400
         text = data.get('text')
         ref_file_url = data.get('ref_file')
+        ref_text = data.get('ref_text', "")
 
         if not text:
             return {'error': 'No text provided in JSON'}, 400
-
+        
         if not ref_file_url:
             return {'error': 'No ref_file provided in JSON'}, 400
 
@@ -129,11 +130,12 @@ def synthesize():
             ref_file_path = 'ref_audio.wav'
             with open(ref_file_path, 'wb') as f:
               f.write(response.content)
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             return {'error': f'Error downloading ref_file: {e}'}, 400
 
         wav, sr, spect = tts.infer(
              ref_file=ref_file_path,
+             ref_text=ref_text,
              gen_text=text,
         )
         buffer = io.BytesIO()
